@@ -3,49 +3,41 @@ package com.ensias.mobile_basedeggplantcarediseasediagnosis
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import androidx.compose.animation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.Save
+import androidx.compose.material.icons.rounded.AddAPhoto
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.ensias.mobile_basedeggplantcarediseasediagnosis.data.ImageResult
-import com.ensias.mobile_basedeggplantcarediseasediagnosis.ui.theme.PrimaryGreen
-import com.ensias.mobile_basedeggplantcarediseasediagnosis.ui.theme.PrimaryViolet
 import com.ensias.mobilemangrove.data.AppDatabase
 import kotlinx.coroutines.launch
 import java.io.File
@@ -64,6 +56,7 @@ fun getDiseaseDescription(result: String): String {
     return disease?.description ?: "Disease not found"
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResultScreen(navController: NavController, result: String, confidence: String) {
     val context = LocalContext.current
@@ -81,13 +74,10 @@ fun ResultScreen(navController: NavController, result: String, confidence: Strin
         val width = bitmap.width
         val height = bitmap.height
 
-
         val scaleWidth = newWidth.toFloat() / width
         val scaleHeight = newHeight.toFloat() / height
 
-
         val matrix = Matrix()
-
 
         matrix.postScale(scaleWidth, scaleHeight)
 
@@ -122,152 +112,188 @@ fun ResultScreen(navController: NavController, result: String, confidence: Strin
         }
     }
 
-
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    0f to PrimaryViolet,
-                    1f to PrimaryGreen
-                )
-            )
-            .systemBarsPadding()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.arrow),
-                contentDescription = "Back",
-                modifier = Modifier
-                    .size(30.dp)
-                    .clickable {
-                        navController.navigate(Routes.homePage) {
-                            popUpTo(Routes.resultPage) { inclusive = true }
-                        }
-                    }
-            )
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-        image?.let {
-            Image(
-                bitmap = it,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(300.dp)
-                    .padding(top = 32.dp)
-
-                    .clip(RoundedCornerShape(24.dp))
-            )
-        }
-
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Card(
-            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-            colors = CardDefaults.cardColors(Color.White),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(80.dp)
-                .padding(8.dp),
-            shape = MaterialTheme.shapes.medium,
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(8.dp)
-                    .verticalScroll(rememberScrollState()),
-                contentAlignment = Alignment.Center
-            ) {
-
-                Text(
-                    text = "$result\n$confidence%",
-                    style = MaterialTheme.typography.bodyMedium.copy(fontSize = 18.sp),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(bottom = 12.dp)
-                        .fillMaxWidth()
-                )
-
-
-            }
-        }
-
-        Card(
-            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-            colors = CardDefaults.cardColors(Color.White),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(160.dp)
-                .padding(8.dp),
-            shape = MaterialTheme.shapes.medium,
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(8.dp)
-                    .verticalScroll(rememberScrollState()),
-            ) {
-
-
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
                     Text(
-                        text = description,
-                        style = MaterialTheme.typography.bodyMedium.copy(fontSize = 18.sp),
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier
-                            .padding(bottom = 12.dp)
-                            .fillMaxWidth()
+                        "Diagnosis Result",
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.SemiBold
+                        )
                     )
-
-            }
-        }
-
-        Row(
-            modifier = Modifier.fillMaxWidth(), // Ensures the Row takes full width
-            verticalAlignment = Alignment.CenterVertically // Aligns children vertically center
-        ) {
-            // Capture Button
-            ActionButton(
-                onClick = {
-                    navController.navigate(Routes.plantPage) {
-                        popUpTo(Routes.resultPage) { inclusive = true }
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            navController.navigate(Routes.homePage) {
+                                popUpTo(Routes.resultPage) { inclusive = true }
+                            }
+                        }
+                    ) {
+                        Icon(Icons.Rounded.ArrowBack, "Back")
                     }
                 },
-                text = "Capture"
-            )
-            Spacer(modifier = Modifier.width(16.dp)) // Adds spacing between buttons and text
-
-            // Conditional rendering of Save button or Saved text
-            if (!isSaved) {
-                ActionButton(
-                    onClick = {
-                        saveImage()
-                    },
-                    text = "Save"
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
                 )
-            } else {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ){
+            )
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .background(MaterialTheme.colorScheme.background)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            ElevatedCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                colors = CardDefaults.elevatedCardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    image?.let {
+                        Image(
+                            bitmap = it,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(250.dp)
+                                .clip(RoundedCornerShape(16.dp))
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Disease name and confidence
                     Text(
-                        text = "Saved",
-                        style = MaterialTheme.typography.bodyMedium.copy(fontSize = 18.sp),
-                        textAlign = TextAlign.End,
-                        color = Color.White
+                        text = result,
+                        style = MaterialTheme.typography.headlineSmall.copy(
+                            fontWeight = FontWeight.SemiBold
+                        ),
+                        textAlign = TextAlign.Center
+                    )
+
+                    Text(
+                        text = "Confidence: $confidence%",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 4.dp)
                     )
                 }
             }
+
+            // Description card
+            ElevatedCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                colors = CardDefaults.elevatedCardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        text = "Description",
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    )
+
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Action buttons
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                if (!isSaved) {
+                    Button(
+                        onClick = { saveImage() },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp),
+                        enabled = !isSaved
+                    ) {
+                        if (isSaved) {
+                            Icon(
+                                Icons.Rounded.CheckCircle,
+                                contentDescription = "Saved",
+                                modifier = Modifier.size(ButtonDefaults.IconSize)
+                            )
+                            Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
+                            Text("Saved to History")
+                        } else {
+                            Icon(
+                                Icons.Rounded.Save,
+                                contentDescription = "Save",
+                                modifier = Modifier.size(ButtonDefaults.IconSize)
+                            )
+                            Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
+                            Text("Save to History")
+                        }
+                    }
+                } else {
+                    Button(
+                        onClick = { /* Already saved */ },
+                        enabled = false,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(
+                            Icons.Rounded.CheckCircle,
+                            contentDescription = "Saved",
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Saved")
+                    }
+                }
+
+                Button(
+                    onClick = {
+                        navController.navigate(Routes.plantPage) {
+                            popUpTo(Routes.resultPage) { inclusive = true }
+                        }
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Icon(
+                        Icons.Rounded.AddAPhoto,
+                        contentDescription = "Take another photo",
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("New Scan")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

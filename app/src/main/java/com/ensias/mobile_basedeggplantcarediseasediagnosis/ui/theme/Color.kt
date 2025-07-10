@@ -2,28 +2,39 @@ package com.ensias.mobile_basedeggplantcarediseasediagnosis.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+// Primary brand colors
+val Primary = Color(0xFF1E6B4E)  // Deep forest green
+val PrimaryLight = Color(0xFF4C9975)
+val PrimaryDark = Color(0xFF004023)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+// Secondary accent colors
+val Secondary = Color(0xFF4CAF50)  // Fresh green
+val SecondaryLight = Color(0xFF80E27E)
+val SecondaryDark = Color(0xFF087F23)
 
-val PrimaryYellowLight = Color(0xFFffeed4)
-val PrimaryYellow = Color(0xFFFFE7BA)
-val PrimaryYellowDark = Color(0xFFe9c16c)
+// Background colors
+val Background = Color(0xFFF8F9FA)
+val Surface = Color(0xFFFFFFFF)
+val SurfaceVariant = Color(0xFFF0F4F1)
 
-val PrimaryPinkBlended = Color(0xFFe4b1cb)
-val PrimaryPinkLight = Color( 0xFFd6a0df)
-val PrimaryPink = Color(0xFFc073cd)
-val PrimaryPinkDark = Color(0xFF78258b)
+// Text colors
+val OnPrimary = Color(0xFFFFFFFF)
+val OnSecondary = Color(0xFF000000)
+val OnBackground = Color(0xFF1C1B1F)
+val OnSurface = Color(0xFF1C1B1F)
+val OnSurfaceVariant = Color(0xFF49454F)
 
-val PrimaryVioletLight = Color(0xFFb0a7e2)
-val PrimaryViolet = Color(0xFF9e91e2)
-val PrimaryVioletDark = Color(0xFF52439a)
+// Additional UI colors
+val Error = Color(0xFFBA1A1A)
+val Success = Color(0xFF4CAF50)
+val Warning = Color(0xFFFFA726)
+val Info = Color(0xFF2196F3)
 
-val PrimaryGreen = Color(0xFF00c29f)
-val PrimaryGreenDark = Color(0xFF008b6c)
+// Transparent colors for overlays
+val SurfaceOverlay = Color(0x14000000)  // 8% black overlay
+val PrimaryOverlay = Color(0x141E6B4E)  // 8% primary overlay
 
-val DarkTextColor = Color(0xFF132b4c)
+// Gradient colors
+val PrimaryGreen = Color(0xFF4CAF50)  // Fresh green for gradient
+val PrimaryViolet = Color(0xFF673AB7)  // Deep violet for gradient
+val PrimaryGreenDark = Color(0xFF388E3C)

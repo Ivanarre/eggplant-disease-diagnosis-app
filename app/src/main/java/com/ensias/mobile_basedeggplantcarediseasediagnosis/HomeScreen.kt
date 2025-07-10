@@ -1,104 +1,188 @@
-package com.androidlead.loginappui.ui.screen.home
+package com.ensias.mobile_basedeggplantcarediseasediagnosis
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.ensias.mobile_basedeggplantcarediseasediagnosis.R
 import com.ensias.mobile_basedeggplantcarediseasediagnosis.Routes
-import com.ensias.mobile_basedeggplantcarediseasediagnosis.ui.theme.PrimaryGreen
-import com.ensias.mobile_basedeggplantcarediseasediagnosis.ui.theme.PrimaryGreenDark
-import com.ensias.mobile_basedeggplantcarediseasediagnosis.ui.theme.PrimaryViolet
+import com.ensias.mobile_basedeggplantcarediseasediagnosis.ui.theme.*
+import kotlinx.coroutines.delay
 
 @Composable
 fun HomeScreen(navController: NavController) {
+    var visible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        delay(100)
+        visible = true
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    0f to PrimaryViolet,
-                    1f to PrimaryGreen
+                    colors = listOf(
+                        Color(0xFF1A237E),  // Deep blue
+                        Color(0xFF4CAF50)   // Green
+                    ),
+                    startY = 0f,
+                    endY = Float.POSITIVE_INFINITY
                 )
             )
             .systemBarsPadding()
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-
-        ) {
-            Spacer(modifier = Modifier.height(20.dp))
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(400.dp)
-
-            )
-
-            ActionButton(onClick = { navController.navigate(Routes.plantPage) }, "My Plant")
-
-            ActionButton(onClick = { navController.navigate(Routes.aboutPage) }, "About Us")
-        }
-
-
-        IconButton(
+        // History button
+        SmallFloatingActionButton(
             onClick = { navController.navigate(Routes.diagnoseHistoryPage) },
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(16.dp)
-                .size(48.dp)
+                .padding(16.dp),
+            containerColor = Color.White.copy(alpha = 0.2f),
+            contentColor = Color.White
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.history),
-                contentDescription = "Diagnose History",
-                tint = Color.White,
-                modifier = Modifier.size(30.dp)
+                contentDescription = "History",
+                modifier = Modifier.size(24.dp)
             )
+        }
+
+        AnimatedVisibility(
+            visible = visible,
+            enter = fadeIn() + slideInVertically(
+                initialOffsetY = { it / 2 }
+            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(32.dp))
+                
+                // App Logo
+                Image(
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = "App Logo",
+                    modifier = Modifier
+                        .size(200.dp)
+                        .clip(CircleShape)
+                        .background(Color.White.copy(alpha = 0.1f))
+                        .padding(16.dp),
+                    contentScale = ContentScale.Fit
+                )
+
+                Spacer(modifier = Modifier.height(48.dp))
+
+                // Welcome Text
+                Text(
+                    text = "Welcome to Eggplant Care",
+                    color = Color.White,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text(
+                    text = "Your plant health assistant",
+                    color = Color.White.copy(alpha = 0.7f),
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(top = 8.dp, bottom = 32.dp)
+                )
+
+                // Action Cards
+                ElevatedCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = Color.White.copy(alpha = 0.1f)
+                    ),
+                    elevation = CardDefaults.elevatedCardElevation(
+                        defaultElevation = 8.dp
+                    )
+                ) {
+                    ActionButton(
+                        onClick = { navController.navigate(Routes.plantPage) },
+                        text = "My Plant",
+                        icon = R.drawable.plant
+                    )
+                }
+
+                ElevatedCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = Color.White.copy(alpha = 0.1f)
+                    ),
+                    elevation = CardDefaults.elevatedCardElevation(
+                        defaultElevation = 8.dp
+                    )
+                ) {
+                    ActionButton(
+                        onClick = { navController.navigate(Routes.aboutPage) },
+                        text = "About Us",
+                        icon = R.drawable.logo
+                    )
+                }
+            }
         }
     }
 }
 
 @Composable
-fun ActionButton(onClick: () -> Unit, text: String) {
-    ElevatedButton(
-        elevation = ButtonDefaults.elevatedButtonElevation(5.dp),
+fun ActionButton(onClick: () -> Unit, text: String, icon: Int) {
+    Surface(
         onClick = onClick,
-        modifier = Modifier
-            .width(220.dp)
-            .height(80.dp)
-            .padding(16.dp),
-        shape = RoundedCornerShape(24.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = PrimaryGreenDark,
-            contentColor = Color.White
-        )
+        color = Color.Transparent,
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Text(text = text, color = Color.White, fontSize = 16.sp)
+        Row(
+            modifier = Modifier
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = icon),
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(24.dp)
+            )
+            
+            Column {
+                Text(
+                    text = text,
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    text = if(text == "My Plant") "Check your plant's health" else "Learn more about us",
+                    color = Color.White.copy(alpha = 0.7f),
+                    fontSize = 14.sp
+                )
+            }
+        }
     }
 }
